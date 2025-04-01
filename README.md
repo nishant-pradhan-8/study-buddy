@@ -4,7 +4,7 @@
 The **Study Buddy** is a web application built using the MERN stack (MongoDB, Express.js, React.js with Next.js, and Node.js) along with Firebase authentication. It helps students manage their study materials in one place, connect with their friends and share study materials with eachother and organize their schedules effectively.
 
 ## 🌐 Live Website
-[[Visit the Study Management App]]((https://study-buddyy.vercel.app)(#)  
+[Visit the Study Management App](https://study-buddyy.vercel.app)(#)  
 
 ## 📌 Features
 - User authentication
