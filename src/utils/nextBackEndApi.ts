@@ -1,6 +1,6 @@
 import axios from "axios";
 const nextBackendApi = axios.create({
-  baseURL: "https://study-management-web-app.onrender.com",
+  baseURL: "https://study-management-app-backend.vercel.app",
   headers: {
     Accept: "application/json",
   },
