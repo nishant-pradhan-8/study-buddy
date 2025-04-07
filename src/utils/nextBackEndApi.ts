@@ -1,6 +1,6 @@
 import axios from "axios";
 const nextBackendApi = axios.create({
-  baseURL: "https://study-management-app-backend.vercel.app",
+  baseURL: "https://study-buddyy.vercel.app",
   headers: {
     Accept: "application/json",
   },
