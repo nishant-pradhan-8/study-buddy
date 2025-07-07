@@ -85,7 +85,7 @@ export default function ProfileDetails() {
             </div>
             {imageSizeExceeded && (
               <p className={`text-red-400 font-semibold`}>
-                *File Size must be of 600x600
+                *File size Exceeded
               </p>
             )}
           </div>

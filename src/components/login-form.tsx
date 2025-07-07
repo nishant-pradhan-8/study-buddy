@@ -23,7 +23,7 @@ export function LoginForm({
 
   useEffect(()=>{
     if(user){
-      console.log(user)
+   
       router.push("/")
     }
   },[user, router])

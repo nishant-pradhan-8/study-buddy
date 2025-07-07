@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useUserContext } from "@/context/userContext";
 import { addEvent } from "@/actions/events/eventAction";
@@ -22,6 +22,7 @@ export default function EventInputCard() {
 
   const { setEventAlertDialogOpen, setEventsChanges } = useEventContext();
   const { setAlertDialogOpen } = useUserContext();
+  const [isProcessing, setIsProcessing] = useState(false);
   const handlePickerOpen = (ref: React.RefObject<HTMLInputElement | null>) => {
     if (ref.current) {
       ref.current.showPicker();
@@ -29,10 +30,15 @@ export default function EventInputCard() {
   };
   const submitEventInfo = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsProcessing(true);
+    // Run validation first
     const eventObj = eventValidation(e);
     if (!eventObj) {
+      setIsProcessing(false);
+      // Return immediately so state update for emptyFields is respected and red border shows
       return;
     }
+    // Only proceed if validation passes
     const res = await addEvent(
       eventObj.title,
       eventObj.start,
@@ -42,6 +48,7 @@ export default function EventInputCard() {
 
     if (!res.data) {
       console.log("Adding Event Failed");
+      setIsProcessing(false);
       return;
     }
     setEventsChanges((val) => val + 1);
@@ -50,6 +57,7 @@ export default function EventInputCard() {
     if (e.currentTarget) {
       (e.currentTarget as HTMLFormElement).reset();
     }
+    setIsProcessing(false);
   };
  
 
@@ -57,6 +65,10 @@ export default function EventInputCard() {
     setEventAlertDialogOpen(null);
     setAlertDialogOpen(false);
   };
+
+  useEffect(()=>{
+    console.log(emptyFields)
+  },[emptyFields])
   return (
     <Card
       className="bg-gray-900 p-4 rounded-xl fixed top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 z-50 text-white w-[30rem] max-sm:!w-[18rem] max-md:w-[24rem] 
@@ -75,6 +87,7 @@ max-h-[80vh] overflow-y-auto"
               <Label htmlFor="name">Event Name</Label>
               <Input
                 name="eventName"
+                required
                 className={`placeholder:text-gray-400 ${
                   emptyFields.eventName ? "border-red-500" : ""
                 }`}
@@ -91,6 +104,7 @@ max-h-[80vh] overflow-y-auto"
                 type="datetime-local"
                 id="start-date"
                 name="startDate"
+                required
                 className={`bg-transparent text-white px-3 py-[0.5rem] rounded-xl  border-[1px] placeholder:text-gray-400 appearance-none w-full ${
                   emptyFields.startDate ? "border-red-500" : "border-white"
                 }`}
@@ -120,6 +134,7 @@ max-h-[80vh] overflow-y-auto"
                   emptyFields.endDate ? "border-red-500" : "border-white"
                 }`}
                 name="endDate"
+                required
               />
               <button
                 type="button"
@@ -140,11 +155,12 @@ max-h-[80vh] overflow-y-auto"
               <Label htmlFor="text-area">Event Description</Label>
               <textarea
                 id="text-area"
-                className={`bg-transparent text-white px-3 py-[0.5rem] rounded-xl border-white border-[1px] placeholder:text-gray-500 ${
+                className={`bg-transparent text-white px-3 py-[0.5rem] rounded-xl border-[1px] placeholder:text-gray-500 ${
                   emptyFields.description ? "border-red-500" : "border-white"
                 }`}
                 placeholder="Enter Event Description"
                 name="description"
+                required
               />
             </div>
           </div>
@@ -155,8 +171,9 @@ max-h-[80vh] overflow-y-auto"
             <button
               type="submit"
               className="primary-btn text-black font-normal"
+              disabled={isProcessing}
             >
-              Submit
+              {isProcessing ? "Processing..." : "Submit"}
             </button>
           </div>
         </form>

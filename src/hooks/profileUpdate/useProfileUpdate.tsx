@@ -35,6 +35,7 @@ export default function useProfileUpdate({
         });
         if (res.status === "success") {
           updates = { ...updates, profilePicture: "" };
+          window.alert("Profile Updated Successfully")
         } else {
           setSaving(false);
           return;
@@ -47,6 +48,7 @@ export default function useProfileUpdate({
         const data = res.data;
         if (data) {
           updates = { ...updates, profilePicture: data.data };
+          window.alert("Profile Updated Successfully")
         } else {
           setSaving(false);
           return;
@@ -58,7 +60,7 @@ export default function useProfileUpdate({
     if (res.status === "error") {
       return console.log("Unexpected Error Occured");
     }
-
+  
     setUser(
       (val) =>
         ({
@@ -70,10 +72,17 @@ export default function useProfileUpdate({
     setTempUrl(undefined);
     setSaving(false);
     setChangedFields({});
+    window.alert("Profile Updated Successfully")
+   
   };
 
   const handleProfilePictureUpdate = (file: File | undefined) => {
     if (!file) {
+      return;
+    }
+    // Check file size (5 MB = 5 * 1024 * 1024 bytes)
+    if (file.size > 5 * 1024 * 1024) {
+      setImageSizeExceeded(true);
       return;
     }
     if (file) {
@@ -82,13 +91,11 @@ export default function useProfileUpdate({
         const img = new Image();
         img.onload = function () {
           if (img.width <= 600 && img.height <= 600) {
-            console.log("Image is under 600x600.");
             setTempUrl(e.target?.result as string);
             setImageSizeExceeded(false);
             setProfilePictureChanged(file);
           } else {
             setImageSizeExceeded(true);
-            console.log("Image exceeds 600x600.");
           }
         };
 

@@ -11,18 +11,17 @@ const useEventValidation = (
     const startDate: string | null = formData.get("startDate")?.toString() || "";
     const endDate: string | null = formData.get("endDate")?.toString() || "";
     const description: string | null =
-      formData.get("description")?.toString() || "";
+      formData.get("description")?.toString().trim() || "";
     if (!eventName || !startDate || !endDate || !description) {
       const newEmptyFields = {
-        // Create a new errors object
         eventName: !eventName,
         startDate: !startDate,
         endDate: !endDate,
         description: !description,
       };
+      console.log(newEmptyFields)
       setEmptyFields(newEmptyFields);
 
-      console.log("All fields are required");
       return false;
     }
     const start = new Date(startDate);
